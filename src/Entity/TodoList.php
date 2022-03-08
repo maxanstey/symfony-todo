@@ -16,11 +16,11 @@ class TodoList
     private $id;
 
     #[ORM\OneToMany(mappedBy: 'todo_list', targetEntity: TodoListItem::class, orphanRemoval: true)]
-    private $title;
+    private $todoListItems;
 
     public function __construct()
     {
-        $this->title = new ArrayCollection();
+        $this->todoListItems = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -31,27 +31,27 @@ class TodoList
     /**
      * @return Collection<int, TodoListItem>
      */
-    public function getTitle(): Collection
+    public function getTodoListItems(): Collection
     {
-        return $this->title;
+        return $this->todoListItems;
     }
 
-    public function addTitle(TodoListItem $title): self
+    public function addTodoListItem(TodoListItem $todoListItem): self
     {
-        if (!$this->title->contains($title)) {
-            $this->title[] = $title;
-            $title->setTodoList($this);
+        if (!$this->todoListItems->contains($todoListItem)) {
+            $this->todoListItems[] = $todoListItem;
+            $todoListItem->setTodoList($this);
         }
 
         return $this;
     }
 
-    public function removeTitle(TodoListItem $title): self
+    public function removeTodoListItem(TodoListItem $todoListItem): self
     {
-        if ($this->title->removeElement($title)) {
+        if ($this->todoListItems->removeElement($todoListItem)) {
             // set the owning side to null (unless already changed)
-            if ($title->getTodoList() === $this) {
-                $title->setTodoList(null);
+            if ($todoListItem->getTodoList() === $this) {
+                $todoListItem->setTodoList(null);
             }
         }
 
