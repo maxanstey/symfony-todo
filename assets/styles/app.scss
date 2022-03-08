@@ -13,4 +13,16 @@ body {
   .list-group-flush > .list-group-item:last-child {
     border-bottom-width: 1px !important;
   }
+
+  form {
+    #todo_list_item {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      &> div > label {
+        display: none;
+      }
+    }
+  }
 }

@@ -3,53 +3,45 @@
 {% block title %}Hello TodoListController!{% endblock %}
 
 {% block body %}
-<div
-    style="width: 400px; height: 600px; background: #fffafa;"
-    class="todo-container
-           position-relative
-           m-auto
-           p-5
-           shadow-lg
-           rounded-1"
->
-    <h1 class="h3 text-center">Start something great!</h1>
+    <div
+        style="width: 400px; height: 600px; background: #fffafa;"
+        class="todo-container
+               position-relative
+               m-auto
+               p-5
+               shadow-lg
+               rounded-1"
+    >
+        <h1 class="h3 text-center">Start something great!</h1>
 
-    <ul class="list-group list-group-flush mt-4">
-        <li class="list-unstyled d-flex align-items-center justify-content-between">
-            <input
-                class="list-group-item shadow-sm my-2 border-0 text-decoration-line-through btn text-start"
-                type="text"
-                readonly
-                value="Walk the dog"
-            >
+        <ul class="list-group list-group-flush mt-4">
+            <li class="list-unstyled d-flex align-items-center justify-content-between">
+                <input
+                    class="list-group-item shadow-sm my-2 border-0 text-decoration-line-through btn text-start"
+                    type="text"
+                    readonly
+                    value="Walk the dog"
+                >
 
-            <button class="btn btn-danger">
-                🗑
-            </button>
-        </li>
-        <li class="list-unstyled d-flex align-items-center justify-content-between">
-            <input
-                class="list-group-item shadow-sm my-2 border-0 btn text-start"
-                type="text"
-                readonly
-                value="Go shopping"
-            >
+                <button class="btn btn-danger ms-2">
+                    🗑
+                </button>
+            </li>
+            <li class="list-unstyled d-flex align-items-center justify-content-between">
+                <input
+                    class="list-group-item shadow-sm my-2 border-0 btn text-start"
+                    type="text"
+                    readonly
+                    value="Go shopping"
+                >
 
-            <button class="btn btn-danger">
-                🗑
-            </button>
-        </li>
-        <li class="list-unstyled d-flex align-items-center justify-content-between">
-            <input
-                class="list-group-item shadow-sm my-2 border-0"
-                type="text"
-                placeholder="Do the dishes"
-            >
-
-            <button class="btn btn-primary">
-                💾
-            </button>
-        </li>
-    </ul>
-</div>
+                <button class="btn btn-danger ms-2">
+                    🗑
+                </button>
+            </li>
+            <li class="list-unstyled d-flex align-items-center justify-content-between">
+                {{ form(form) }}
+            </li>
+        </ul>
+    </div>
 {% endblock %}
