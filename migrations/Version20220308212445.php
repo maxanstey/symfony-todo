@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20220308211617 extends AbstractMigration
+final class Version20220308212445 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -21,7 +21,7 @@ final class Version20220308211617 extends AbstractMigration
     {
         // this up() migration is auto-generated, please modify it to your needs
         $this->addSql('CREATE TABLE todo_list (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL)');
-        $this->addSql('CREATE TABLE todo_list_item (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, todo_list_id INTEGER NOT NULL, is_completed BOOLEAN NOT NULL DEFAULT false)');
+        $this->addSql('CREATE TABLE todo_list_item (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, todo_list_id INTEGER NOT NULL, title VARCHAR(255) NOT NULL, is_completed BOOLEAN NOT NULL)');
         $this->addSql('CREATE INDEX IDX_17404CE7E8A7DCFA ON todo_list_item (todo_list_id)');
     }
 
