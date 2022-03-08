@@ -3,18 +3,53 @@
 {% block title %}Hello TodoListController!{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+<div
+    style="width: 400px; height: 600px; background: #fffafa;"
+    class="todo-container
+           position-relative
+           m-auto
+           p-5
+           shadow-lg
+           rounded-1"
+>
+    <h1 class="h3 text-center">Start something great!</h1>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+    <ul class="list-group list-group-flush mt-4">
+        <li class="list-unstyled d-flex align-items-center justify-content-between">
+            <input
+                class="list-group-item shadow-sm my-2 border-0 text-decoration-line-through btn text-start"
+                type="text"
+                readonly
+                value="Walk the dog"
+            >
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ '/Users/maxanstey/Sites/symfony-todo-app/src/Controller/TodoListController.php'|file_link(0) }}">src/Controller/TodoListController.php</a></code></li>
-        <li>Your template at <code><a href="{{ '/Users/maxanstey/Sites/symfony-todo-app/templates/todo_list/index.html.twig'|file_link(0) }}">templates/todo_list/index.html.twig</a></code></li>
+            <button class="btn btn-danger">
+                🗑
+            </button>
+        </li>
+        <li class="list-unstyled d-flex align-items-center justify-content-between">
+            <input
+                class="list-group-item shadow-sm my-2 border-0 btn text-start"
+                type="text"
+                readonly
+                value="Go shopping"
+            >
+
+            <button class="btn btn-danger">
+                🗑
+            </button>
+        </li>
+        <li class="list-unstyled d-flex align-items-center justify-content-between">
+            <input
+                class="list-group-item shadow-sm my-2 border-0"
+                type="text"
+                placeholder="Do the dishes"
+            >
+
+            <button class="btn btn-primary">
+                💾
+            </button>
+        </li>
     </ul>
 </div>
 {% endblock %}
