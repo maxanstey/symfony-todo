@@ -15,7 +15,14 @@ class TodoList
     #[ORM\Column(type: 'integer')]
     private $id;
 
-    #[ORM\OneToMany(mappedBy: 'todo_list', targetEntity: TodoListItem::class, orphanRemoval: true)]
+    #[ORM\OneToMany(
+        mappedBy: 'todo_list',
+        targetEntity: TodoListItem::class,
+        cascade: [
+            'persist',
+        ],
+        orphanRemoval: true,
+    )]
     private $todoListItems;
 
     public function __construct()

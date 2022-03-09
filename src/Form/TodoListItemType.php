@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\TodoListItem;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -19,7 +20,7 @@ class TodoListItemType extends AbstractType
                     'class' => 'list-group-item shadow-sm my-2 border-0',
                 ],
             ])
-            ->add('save', SubmitType::class, [
+            ->add('save', SubmitType::class, [ // TODO: change label and action based on if new or existing entity
                 'attr' => [
                     'class' => 'btn btn-primary ms-2',
                     'placeholder' => 'Do the dishes',

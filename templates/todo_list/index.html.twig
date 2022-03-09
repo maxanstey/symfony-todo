@@ -27,18 +27,11 @@
                     🗑
                 </button>
             </li>
-            <li class="list-unstyled d-flex align-items-center justify-content-between">
-                <input
-                    class="list-group-item shadow-sm my-2 border-0 btn text-start"
-                    type="text"
-                    readonly
-                    value="Go shopping"
-                >
-
-                <button class="btn btn-danger ms-2">
-                    🗑
-                </button>
-            </li>
+            {% for item in items %}
+                <li class="list-unstyled d-flex align-items-center justify-content-between">
+                    {{ form(item) }}
+                </li>
+            {% endfor %}
             <li class="list-unstyled d-flex align-items-center justify-content-between">
                 {{ form(form) }}
             </li>

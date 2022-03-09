@@ -45,6 +45,14 @@ class TodoListRepository extends ServiceEntityRepository
         }
     }
 
+    public function first(): TodoList|null
+    {
+        return $this->createQueryBuilder('t')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getResult()[0] ?? null;
+    }
+
     // /**
     //  * @return TodoList[] Returns an array of TodoList objects
     //  */
