@@ -7,6 +7,7 @@ use App\Entity\TodoListItem;
 use App\Form\TodoListItemType;
 use App\Repository\TodoListRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -43,19 +44,34 @@ class TodoListController extends AbstractController
 
         $existingTodoListItems = $this->todoListRepository->first()->getTodoListItems()->toArray();
 
-        $haveFormsBeenSubmitted =  $this->handleSubmittedForms(
-            [
-                new TodoListItem(),
-                ...$existingTodoListItems,
-            ],
-            $request
-        );
+        try {
+            $hasFormBeenSubmitted = $this->handleSubmittedForms(
+                [
+                    new TodoListItem(),
+                    ...$existingTodoListItems,
+                ],
+                $request
+            );
+        } catch (Exception $exception) {
+            $this->addFlash(
+                'notice',
+                $exception->getMessage()
+            );
 
-        if ($haveFormsBeenSubmitted === true) {
             return $this->redirect($request->getUri());
         }
 
-        // TODO: handle form errors?
+        if ($hasFormBeenSubmitted === true) {
+            $this->addFlash(
+                'notice',
+                sprintf(
+                    'Task %s successfully.',
+                    $request->get('_method') === 'DELETE' ? 'deleted' : 'saved'
+                )
+            );
+
+            return $this->redirect($request->getUri());
+        }
 
         return $this->render('todo_list/index.html.twig', [
             'controller_name' => 'TodoListController',
@@ -80,12 +96,11 @@ class TodoListController extends AbstractController
      * @param TodoListItem[] $items
      * @param Request $request
      * @return bool
+     * @throws Exception
      * @link https://stackoverflow.com/a/36557060/8472578
      */
     private function handleSubmittedForms(array $items, Request $request): bool
     {
-        $haveFormsBeenSubmitted = false;
-
         foreach ($items as $item) {
             $formName = $item->getId() === null ? 'todo_list_item_form_0' : 'todo_list_item_form_' . $item->getId();
 
@@ -97,11 +112,21 @@ class TodoListController extends AbstractController
 
             $form->handleRequest($request);
 
-            if ($form->isSubmitted() === false || $form->isValid() === false) {
+            if ($form->isSubmitted() === false) {
                 continue;
             }
 
-            $haveFormsBeenSubmitted = true;
+            if ($form->isValid() === false) {
+                $errorMessage = 'An error occurred while attempting to create your task.';
+
+                foreach ($form->getErrors(true) as $error) {
+                    $errorMessage = $error->getMessage();
+
+                    break;
+                }
+
+                throw new Exception($errorMessage);
+            }
 
             /** @var TodoListItem $item */
             $item = $form->getData();
@@ -119,10 +144,12 @@ class TodoListController extends AbstractController
 
                 $this->entityManager->persist($item);
             }
+
+            $this->entityManager->flush();
+
+            return true;
         }
 
-        $this->entityManager->flush();
-
-        return $haveFormsBeenSubmitted;
+        return false;
     }
 }

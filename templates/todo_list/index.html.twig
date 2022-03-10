@@ -3,6 +3,12 @@
 {% block title %}Hello TodoListController!{% endblock %}
 
 {% block body %}
+    {% for message in app.flashes('notice') %}
+        <div class="flash-notice toast show p-3">
+            {{ message }}
+        </div>
+    {% endfor %}
+
     <div
         style="width: 400px; height: 600px; background: #fffafa;"
         class="todo-container

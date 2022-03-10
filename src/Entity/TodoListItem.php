@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\TodoListItemRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: TodoListItemRepository::class)]
 class TodoListItem
@@ -14,8 +15,15 @@ class TodoListItem
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\Length(
+        min: 1,
+        max: 12,
+        minMessage: 'Your task\'s title is too short. It must be at least {{ limit }} character long.',
+        maxMessage: 'Your task\'s title is too long. It should have {{ limit }} characters or less.',
+    )]
     private $title;
 
+    // TODO: remove
     #[ORM\Column(type: 'boolean')]
     private $is_completed;
 
