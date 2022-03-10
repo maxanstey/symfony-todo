@@ -28,6 +28,7 @@ class TodoListController extends AbstractController
         $this->todoListRepository = $todoListRepository;
     }
 
+    // TODO: allow multiple lists /list/1/items, list/1/next (redirect to /list/2/items)
     #[Route('', name: 'app_todo_list')]
     public function index(Request $request): Response
     {
