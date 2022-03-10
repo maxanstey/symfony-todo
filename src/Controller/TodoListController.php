@@ -66,7 +66,7 @@ class TodoListController extends AbstractController
                 'notice',
                 sprintf(
                     'Task %s successfully.',
-                    $request->get('_method') === 'DELETE' ? 'deleted' : 'saved'
+                    $request->get('_method') === 'DELETE' ? 'deleted' : 'created'
                 )
             );
 
