@@ -43,7 +43,7 @@ class TodoListController extends AbstractController
 
         $existingTodoListItems = $this->todoListRepository->first()->getTodoListItems()->toArray();
 
-        $this->handleSubmittedForms(
+        $haveFormsBeenSubmitted =  $this->handleSubmittedForms(
             [
                 new TodoListItem(),
                 ...$existingTodoListItems,
@@ -51,8 +51,11 @@ class TodoListController extends AbstractController
             $request
         );
 
+        if ($haveFormsBeenSubmitted === true) {
+            return $this->redirect($request->getUri());
+        }
+
         // TODO: handle form errors?
-        // TODO: return $this->redirect($request->getUri()); if submitted
 
         return $this->render('todo_list/index.html.twig', [
             'controller_name' => 'TodoListController',
@@ -67,21 +70,23 @@ class TodoListController extends AbstractController
                             'class' => 'todo_list_item_form',
                         ]
                     ]
-                )->getForm()->createView(),
+                )->setMethod('DELETE')->getForm()->createView(),
                 $existingTodoListItems
             ),
         ]);
     }
 
     /**
-     * @param TodoListItem[] $todoListItems
+     * @param TodoListItem[] $items
      * @param Request $request
-     * @return void
+     * @return bool
      * @link https://stackoverflow.com/a/36557060/8472578
      */
-    private function handleSubmittedForms(array $todoListItems, Request $request): void
+    private function handleSubmittedForms(array $items, Request $request): bool
     {
-        foreach ($todoListItems as $item) {
+        $haveFormsBeenSubmitted = false;
+
+        foreach ($items as $item) {
             $formName = $item->getId() === null ? 'todo_list_item_form_0' : 'todo_list_item_form_' . $item->getId();
 
             $form = $this->formFactory->createNamedBuilder(
@@ -96,20 +101,28 @@ class TodoListController extends AbstractController
                 continue;
             }
 
-            /** @var TodoListItem $todoListItem */
-            $todoListItem = $form->getData();
+            $haveFormsBeenSubmitted = true;
 
-            if ($todoListItem->getIsCompleted() === null) {
-                $todoListItem->setIsCompleted(false);
+            /** @var TodoListItem $item */
+            $item = $form->getData();
+
+            if ($request->get('_method') === 'DELETE') {
+                $this->entityManager->remove($item);
+            } else {
+                if ($item->getIsCompleted() === null) {
+                    $item->setIsCompleted(false);
+                }
+
+                if ($item->getTodoList() === null) {
+                    $item->setTodoList($this->todoListRepository->first() ?? new TodoList());
+                }
+
+                $this->entityManager->persist($item);
             }
-
-            if ($todoListItem->getTodoList() === null) {
-                $todoListItem->setTodoList($this->todoListRepository->first() ?? new TodoList());
-            }
-
-            $this->entityManager->persist($todoListItem);
         }
 
         $this->entityManager->flush();
+
+        return $haveFormsBeenSubmitted;
     }
 }

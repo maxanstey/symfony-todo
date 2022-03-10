@@ -15,18 +15,6 @@
         <h1 class="h3 text-center">Start something great!</h1>
 
         <ul class="list-group list-group-flush mt-4">
-            <li class="list-unstyled d-flex align-items-center justify-content-between">
-                <input
-                    class="list-group-item shadow-sm my-2 border-0 text-decoration-line-through btn text-start"
-                    type="text"
-                    readonly
-                    value="Walk the dog"
-                >
-
-                <button class="btn btn-danger ms-2">
-                    🗑
-                </button>
-            </li>
             {% for item in items %}
                 <li class="list-unstyled d-flex align-items-center justify-content-between">
                     {{ form(item) }}
