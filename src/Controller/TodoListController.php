@@ -19,7 +19,7 @@ class TodoListController extends AbstractController
 
     public function __construct(
         private EntityManagerInterface $entityManager,
-        private FormFactoryInterface $formFactory
+        private FormFactoryInterface $formFactory,
     ) {
         /** @var TodoListRepository $todoListRepository */
         $todoListRepository = $this->entityManager->getRepository(TodoList::class);
