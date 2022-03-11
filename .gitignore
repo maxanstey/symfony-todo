@@ -17,6 +17,7 @@ yarn-error.log
 
 .env
 .idea
+.php-cs-fixer.cache
 coverage
 tools/php-cs-fixer/vendor
 

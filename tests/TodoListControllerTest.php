@@ -21,7 +21,7 @@ class TodoListControllerTest extends WebTestCase
 
         $flashNotice = $crawler->filter('.flash-notice')->first();
 
-        $this->assertTrue($flashNotice->innerText() === 'Task created successfully.');
+        $this->assertTrue('Task created successfully.' === $flashNotice->innerText());
 
         $mostRecentTaskTitle = $crawler->filter('input:not(#todo_list_item_form_0_title)')->last();
 
@@ -29,7 +29,7 @@ class TodoListControllerTest extends WebTestCase
 
         $deleteButtonId = str_replace('_title', '_delete', $mostRecentTaskTitle->attr('id'));
 
-        $this->client->submit($crawler->filter('#' . $deleteButtonId)->form());
+        $this->client->submit($crawler->filter('#'.$deleteButtonId)->form());
 
         $crawler = $this->client->followRedirect();
 
@@ -62,13 +62,13 @@ class TodoListControllerTest extends WebTestCase
     }
 
     /**
-     * @return void
      * @throws Exception
      */
-    protected function setUp(): void {
+    protected function setUp(): void
+    {
         $this->client = $this->createClient();
 
-        $this->randomLongString =  bin2hex(random_bytes(32));
+        $this->randomLongString = bin2hex(random_bytes(32));
 
         parent::setUp();
     }
