@@ -45,12 +45,22 @@ class TodoListRepository extends ServiceEntityRepository
         }
     }
 
-    public function first(): TodoList|null
+    public function findFirst(): TodoList|null
     {
         return $this->createQueryBuilder('t')
+            ->orderBy('t.id', 'asc')
             ->setMaxResults(1)
             ->getQuery()
             ->getResult()[0] ?? null;
+    }
+
+    public function findLast(): TodoList|null
+    {
+        return $this->createQueryBuilder('t')
+                ->orderBy('t.id', 'desc')
+                ->setMaxResults(1)
+                ->getQuery()
+                ->getResult()[0] ?? null;
     }
 
     // /**

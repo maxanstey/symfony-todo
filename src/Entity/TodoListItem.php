@@ -9,6 +9,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: TodoListItemRepository::class)]
 class TodoListItem
 {
+    public const MIN_TITLE_LENGTH = 1;
+    public const MAX_TITLE_LENGTH = 12;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
