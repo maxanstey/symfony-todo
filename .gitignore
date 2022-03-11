@@ -17,6 +17,7 @@ yarn-error.log
 
 .env
 .idea
+coverage
 
 ###> symfony/phpunit-bridge ###
 .phpunit.result.cache

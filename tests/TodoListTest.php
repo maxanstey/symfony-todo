@@ -13,7 +13,7 @@ class TodoListTest extends WebTestCase
     private KernelBrowser $client;
     private string $randomLongString;
 
-    public function testValidFormSubmitsAndRendersNewItem(): void
+    public function testValidFormSubmitsAndCanBeDeleted(): void
     {
         $randomTitle = substr($this->randomLongString, 0, TodoListItem::MIN_TITLE_LENGTH);
 
@@ -26,6 +26,16 @@ class TodoListTest extends WebTestCase
         $mostRecentTaskTitle = $crawler->filter('input:not(#todo_list_item_form_0_title)')->last();
 
         $this->assertTrue($mostRecentTaskTitle->attr('value') === $randomTitle);
+
+        $deleteButtonId = str_replace('_title', '_delete', $mostRecentTaskTitle->attr('id'));
+
+        $this->client->submit($crawler->filter('#' . $deleteButtonId)->form());
+
+        $crawler = $this->client->followRedirect();
+
+        $flashNotice = $crawler->filter('.flash-notice')->first();
+
+        $this->assertTrue(str_contains($flashNotice->innerText(), 'deleted'));
     }
 
     public function testFormWithInvalidTitlesDoNotSubmit(): void
