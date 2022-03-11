@@ -23,7 +23,6 @@ class TodoListItem
     )]
     private $title;
 
-    // TODO: remove
     #[ORM\Column(type: 'boolean')]
     private $is_completed;
 
