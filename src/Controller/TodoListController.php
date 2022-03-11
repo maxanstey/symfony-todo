@@ -39,7 +39,7 @@ class TodoListController extends AbstractController
             [
                 'attr' => [
                     'class' => 'todo_list_item_form',
-                ]
+                ],
             ]
         )->getForm();
 
@@ -62,12 +62,12 @@ class TodoListController extends AbstractController
             return $this->redirect($request->getUri());
         }
 
-        if ($hasFormBeenSubmitted === true) {
+        if (true === $hasFormBeenSubmitted) {
             $this->addFlash(
                 'notice',
                 sprintf(
                     'Task %s successfully.',
-                    $request->get('_method') === 'DELETE' ? 'deleted' : 'created'
+                    'DELETE' === $request->get('_method') ? 'deleted' : 'created'
                 )
             );
 
@@ -79,13 +79,13 @@ class TodoListController extends AbstractController
             'form' => $form->createView(),
             'items' => array_map(
                 fn (TodoListItem $item) => $this->formFactory->createNamedBuilder(
-                    'todo_list_item_form_' . $item->getId(),
+                    'todo_list_item_form_'.$item->getId(),
                     TodoListItemType::class,
                     $item,
                     [
                         'attr' => [
                             'class' => 'todo_list_item_form',
-                        ]
+                        ],
                     ]
                 )->setMethod('DELETE')->getForm()->createView(),
                 $existingTodoListItems
@@ -95,15 +95,15 @@ class TodoListController extends AbstractController
 
     /**
      * @param TodoListItem[] $items
-     * @param Request $request
-     * @return bool
+     *
      * @throws Exception
-     * @link https://stackoverflow.com/a/36557060/8472578
+     *
+     * @see https://stackoverflow.com/a/36557060/8472578
      */
     private function handleSubmittedForms(array $items, Request $request): bool
     {
         foreach ($items as $item) {
-            $formName = $item->getId() === null ? 'todo_list_item_form_0' : 'todo_list_item_form_' . $item->getId();
+            $formName = null === $item->getId() ? 'todo_list_item_form_0' : 'todo_list_item_form_'.$item->getId();
 
             $form = $this->formFactory->createNamedBuilder(
                 $formName,
@@ -113,11 +113,11 @@ class TodoListController extends AbstractController
 
             $form->handleRequest($request);
 
-            if ($form->isSubmitted() === false) {
+            if (false === $form->isSubmitted()) {
                 continue;
             }
 
-            if ($form->isValid() === false) {
+            if (false === $form->isValid()) {
                 $errorMessage = 'An error occurred while attempting to create your task.';
 
                 foreach ($form->getErrors(true) as $error) {
@@ -132,14 +132,14 @@ class TodoListController extends AbstractController
             /** @var TodoListItem $item */
             $item = $form->getData();
 
-            if ($request->get('_method') === 'DELETE') {
+            if ('DELETE' === $request->get('_method')) {
                 $this->entityManager->remove($item);
             } else {
-                if ($item->getIsCompleted() === null) {
+                if (null === $item->getIsCompleted()) {
                     $item->setIsCompleted(false);
                 }
 
-                if ($item->getTodoList() === null) {
+                if (null === $item->getTodoList()) {
                     $item->setTodoList($this->todoListRepository->findFirst() ?? new TodoList());
                 }
 
