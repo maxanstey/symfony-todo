@@ -8,7 +8,7 @@ use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DomCrawler\Crawler;
 
-class TodoListTest extends WebTestCase
+class TodoListControllerTest extends WebTestCase
 {
     private KernelBrowser $client;
     private string $randomLongString;
