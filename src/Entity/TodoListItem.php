@@ -19,8 +19,8 @@ class TodoListItem
 
     #[ORM\Column(type: 'string', length: 255)]
     #[Assert\Length(
-        min: 1,
-        max: 12,
+        min: self::MIN_TITLE_LENGTH,
+        max: self::MAX_TITLE_LENGTH,
         minMessage: 'Your task\'s title is too short. It must be at least {{ limit }} character long.',
         maxMessage: 'Your task\'s title is too long. It should have {{ limit }} characters or less.',
     )]
