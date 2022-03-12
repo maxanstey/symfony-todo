@@ -4,7 +4,7 @@ namespace App\Tests;
 
 use PHPUnit\Framework\TestCase;
 
-class TodoListItemTest extends TestCase
+class TodoListTest extends TestCase
 {
     public function testSomething(): void
     {
