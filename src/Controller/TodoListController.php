@@ -10,12 +10,15 @@ use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\Form\FormView;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class TodoListController extends AbstractController
 {
+    public const CREATE_MESSAGE = 'Task created successfully.';
+    public const DELETE_MESSAGE = 'Task deleted successfully.';
     private TodoListRepository $todoListRepository;
 
     public function __construct(
@@ -28,7 +31,6 @@ class TodoListController extends AbstractController
         $this->todoListRepository = $todoListRepository;
     }
 
-    // TODO: allow multiple lists /list/1/items, list/1/next (redirect to /list/2/items)
     #[Route('', name: 'app_todo_list')]
     public function index(Request $request): Response
     {
@@ -65,10 +67,7 @@ class TodoListController extends AbstractController
         if (true === $hasFormBeenSubmitted) {
             $this->addFlash(
                 'notice',
-                sprintf(
-                    'Task %s successfully.',
-                    'DELETE' === $request->get('_method') ? 'deleted' : 'created'
-                )
+                'DELETE' === $request->get('_method') ? self::DELETE_MESSAGE : self::CREATE_MESSAGE
             );
 
             return $this->redirect($request->getUri());
@@ -78,7 +77,7 @@ class TodoListController extends AbstractController
             'controller_name' => 'TodoListController',
             'form' => $form->createView(),
             'items' => array_map(
-                fn (TodoListItem $item) => $this->formFactory->createNamedBuilder(
+                fn (TodoListItem $item): FormView => $this->formFactory->createNamedBuilder(
                     'todo_list_item_form_'.$item->getId(),
                     TodoListItemType::class,
                     $item,

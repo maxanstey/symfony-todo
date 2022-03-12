@@ -2,6 +2,7 @@
 
 namespace App\Tests;
 
+use App\Controller\TodoListController;
 use App\Entity\TodoListItem;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -21,7 +22,7 @@ class TodoListControllerTest extends WebTestCase
 
         $flashNotice = $crawler->filter('.flash-notice')->first();
 
-        $this->assertTrue('Task created successfully.' === $flashNotice->innerText());
+        $this->assertTrue(TodoListController::CREATE_MESSAGE === $flashNotice->innerText());
 
         $mostRecentTaskTitle = $crawler->filter('input:not(#todo_list_item_form_0_title)')->last();
 
@@ -35,12 +36,21 @@ class TodoListControllerTest extends WebTestCase
 
         $flashNotice = $crawler->filter('.flash-notice')->first();
 
-        $this->assertTrue(str_contains($flashNotice->innerText(), 'deleted'));
+        $this->assertTrue(TodoListController::DELETE_MESSAGE === $flashNotice->innerText());
     }
 
     public function testFormWithInvalidTitlesDoNotSubmit(): void
     {
         $randomTitle = substr($this->randomLongString, 0, TodoListItem::MAX_TITLE_LENGTH + 1);
+
+        if (strlen($randomTitle) < TodoListItem::MAX_TITLE_LENGTH + 1) {
+            $this->fail(
+                sprintf(
+                    'The random title "%s" is too short for testing; try increasing the length of random_bytes().',
+                    $randomTitle
+                )
+            );
+        }
 
         $crawler = $this->createNewTaskWithTitle($randomTitle);
 
@@ -77,9 +87,7 @@ class TodoListControllerTest extends WebTestCase
     {
         $crawler = $this->client->request('GET', '/');
 
-        $formSaveButton = $crawler->filter('#todo_list_item_form_0_save');
-
-        $form = $formSaveButton->form();
+        $form = $crawler->filter('#todo_list_item_form_0_save')->form();
 
         $form->get('todo_list_item_form_0[title]')->setValue($taskTitle);
 
