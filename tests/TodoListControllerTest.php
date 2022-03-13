@@ -4,6 +4,8 @@ namespace App\Tests;
 
 use App\Controller\TodoListController;
 use App\Entity\TodoListItem;
+use Doctrine\DBAL\Exception as DbalException;
+use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -80,7 +82,39 @@ class TodoListControllerTest extends WebTestCase
 
         $this->randomLongString = bin2hex(random_bytes(32));
 
+        $this->truncateEntities();
+
         parent::setUp();
+    }
+
+    /**
+     * @return void
+     * @throws DbalException
+     * @see https://symfonycasts.com/screencast/phpunit/control-database
+     */
+    private function truncateEntities(): void
+    {
+        /** @var EntityManagerInterface $entityManager */
+        $entityManager = $this->getContainer()->get(EntityManagerInterface::class);
+
+        $connection = $entityManager->getConnection();
+        $databasePlatform = $connection->getDatabasePlatform();
+
+        if ($databasePlatform->supportsForeignKeyConstraints()) {
+            $connection->query('SET FOREIGN_KEY_CHECKS=0');
+        }
+
+        foreach ($entityManager->getConfiguration()->getMetadataDriverImpl()->getAllClassNames() as $entity) {
+            $query = $databasePlatform->getTruncateTableSQL(
+                $entityManager->getClassMetadata($entity)->getTableName()
+            );
+
+            $connection->executeStatement($query);
+        }
+
+        if ($databasePlatform->supportsForeignKeyConstraints()) {
+            $connection->query('SET FOREIGN_KEY_CHECKS=1');
+        }
     }
 
     private function createNewTaskWithTitle(string $taskTitle): Crawler

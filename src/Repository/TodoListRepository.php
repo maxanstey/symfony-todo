@@ -54,15 +54,6 @@ class TodoListRepository extends ServiceEntityRepository
             ->getResult()[0] ?? null;
     }
 
-    public function findLast(): TodoList|null
-    {
-        return $this->createQueryBuilder('t')
-                ->orderBy('t.id', 'desc')
-                ->setMaxResults(1)
-                ->getQuery()
-                ->getResult()[0] ?? null;
-    }
-
     // /**
     //  * @return TodoList[] Returns an array of TodoList objects
     //  */

@@ -141,7 +141,7 @@ class TodoListController extends AbstractController
                 if (null === $item->getTodoList()) {
                     $todoList = $this->todoListRepository->findFirst();
 
-                    if ($todoList === null) {
+                    if (null === $todoList) {
                         $todoList = new TodoList();
 
                         $this->entityManager->persist($todoList);
