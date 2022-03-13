@@ -45,7 +45,7 @@ class TodoListController extends AbstractController
             ]
         )->getForm();
 
-        $existingTodoListItems = $this->todoListRepository->findFirst()->getTodoListItems()->toArray();
+        $existingTodoListItems = $this->todoListRepository->findFirst()?->getTodoListItems()->toArray() ?: [];
 
         try {
             $hasFormBeenSubmitted = $this->handleSubmittedForms(
@@ -139,7 +139,15 @@ class TodoListController extends AbstractController
                 }
 
                 if (null === $item->getTodoList()) {
-                    $item->setTodoList($this->todoListRepository->findFirst() ?? new TodoList());
+                    $todoList = $this->todoListRepository->findFirst();
+
+                    if ($todoList === null) {
+                        $todoList = new TodoList();
+
+                        $this->entityManager->persist($todoList);
+                    }
+
+                    $item->setTodoList($todoList);
                 }
 
                 $this->entityManager->persist($item);
